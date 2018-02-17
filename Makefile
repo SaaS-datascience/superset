@@ -26,7 +26,7 @@ network:
 
 
 build:
-	docker build -t superset .
+	docker build --build-arg proxy=${http_proxy} -t superset .
 
 init-db:
 	docker exec -it superset superset-init

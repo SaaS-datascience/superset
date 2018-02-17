@@ -2,13 +2,16 @@ FROM debian:stretch
 
 # Superset version
 ARG SUPERSET_VERSION=0.22.1
+ARG proxy
+ENV http_proxy $proxy
+ENV https_proxy $proxy
 
 # Configure environment
 ENV LANG=C.UTF-8 \
     LC_ALL=C.UTF-8 \
     PYTHONPATH=/etc/superset:/home/superset:$PYTHONPATH \
     SUPERSET_VERSION=${SUPERSET_VERSION} \
-    SUPERSET_HOME=/var/lib/superset
+    SUPERSET_HOME=/var/lib/superset 
 
 # Create superset user & install dependencies
 RUN useradd -U -m superset && \
@@ -27,9 +30,10 @@ RUN useradd -U -m superset && \
         libsasl2-dev \
         libssl-dev \
         openjdk-8-jdk \
+	unixodbc-dev \
         python3-dev \
-        python3-pip && \
-    pip3 install \
+        python3-pip
+RUN pip3 install `echo $proxy | sed 's/\(\S\S*\)/--proxy \1/'` \
         flask-cors==3.0.3 \
         flask-mail==0.9.1 \
         flask-oauth==0.12 \
@@ -45,6 +49,7 @@ RUN useradd -U -m superset && \
         sqlalchemy-redshift==0.5.0 \
         sqlalchemy-clickhouse==0.1.1.post3 \
         Werkzeug==0.12.1 \
+        sqlalchemy-vertica[pyodbc] \
         superset==${SUPERSET_VERSION}
 
 # Configure Filesystem
