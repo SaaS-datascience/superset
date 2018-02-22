@@ -23,6 +23,9 @@ ifeq ("$(wildcard /usr/bin/docker)","")
         sudo chmod +x /usr/local/bin/docker-compose
 endif
 
+download:
+	wget https://my.vertica.com/client_drivers/9.0.x/9.0.0-1/vertica-client-9.0.0-1.x86_64.tar.gz
+
 network: 
 	@docker network create latelier 2> /dev/null; true
 

@@ -49,15 +49,19 @@ RUN pip3 install `echo $proxy | sed 's/\(\S\S*\)/--proxy \1/'` \
         sqlalchemy-redshift==0.5.0 \
         sqlalchemy-clickhouse==0.1.1.post3 \
         Werkzeug==0.12.1 \
-        sqlalchemy-vertica[pyodbc] \
+        sqlalchemy-vertica-python \
         superset==${SUPERSET_VERSION}
 
 # Configure Filesystem
 COPY superset /usr/local/bin
+
 VOLUME /home/superset \
        /etc/superset \
        /var/lib/superset
 WORKDIR /home/superset
+
+#COPY vertica-client-9.0.0-1.x86_64.tar.gz /tmp/vertica.tgz
+#RUN tar xzf /tmp/vertica.tgz -C / && rm /tmp/vertica.tgz
 
 # Deploy application
 EXPOSE 8088
